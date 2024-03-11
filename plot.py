@@ -11,7 +11,7 @@ import airfrans as af
 def plot2d(dataset_list, dataset_name, net, device):
 
   X_test_list = []
-  y_test_list = []
+  # y_test_list = []
 
   # for i in range(len(dataset_list)):
   for i in range(1):
