@@ -1,5 +1,6 @@
 import numpy as np
 import tqdm
+import argparse
 
 import torch
 import torch.nn as nn
@@ -7,12 +8,23 @@ import torch.nn as nn
 from preprocess_data import dataset_creation
 from models import DeepONet
 
+def config(parser):
+    # parser.add_argument('--stage', default=3, type=int)
+    parser.add_argument('--root_dir', default="/content/drive/MyDrive/AirfRANS/Dataset", type=str)
+    parser.add_argument('--save_dir', default="/content/drive/MyDrive/AirfRANS/saved_models", type=str)
+    # parser.add_argument('--few_shot', default=False, type=bool)
+    return parser
 
 if __name__=="__main__":
 
-  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+  parser = argparse.ArgumentParser()
+  parser = config(parser)
+  args = vars(parser.parse_args())
 
-  save_dir = "/content/drive/MyDrive/AirfRANS/saved_models"
+  save_dir = args['save_dir']
+  root_dir = args['root_dir']
+  
+  device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
   
   m=402
   dim_x=2
@@ -22,7 +34,7 @@ if __name__=="__main__":
   print_every = iterations/1000
   learning_rate = 2e-4
 
-  X_train_list,y_train_list,X_test_list,y_test_list = dataset_creation.preprocess_data_airfrans(root_dir="/content/drive/MyDrive/AirfRANS/Dataset", task="scarce", train=True, download_data=False)
+  X_train_list,y_train_list,X_test_list,y_test_list = dataset_creation.preprocess_data_airfrans(root_dir=root_dir, task="scarce", train=True, download_data=False)
 
   X_train = torch.Tensor(X_train_list).to(device)
   y_train = torch.Tensor(y_train_list).to(device)
